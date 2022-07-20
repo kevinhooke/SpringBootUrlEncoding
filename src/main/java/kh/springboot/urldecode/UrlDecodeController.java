@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-public class UrlDecondeController {
+public class UrlDecodeController {
 
 	/**
 	 * @GetMapping showing that request params mapped with @ReqeustParam
