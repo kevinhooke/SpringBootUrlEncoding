@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class UrlDecondeController {
@@ -55,6 +56,21 @@ public class UrlDecondeController {
 		return "success";
 	}
 	
+	
+	/**
+	 * Get method that uses RestTemplate to call POST /example2 passing 
+	 * urlencoded values to show Controller also handles these ok when
+	 * passed from a RestTemplate client.
+	 * 
+	 * @return
+	 */
+	@GetMapping(value = "/request")
+	public String request() {
+	    String url =  "http://localhost:8080/example2?param1=test1%26test2";
+	    System.out.println(url);
+	    RestTemplate restTemplate = new RestTemplate();
+	    return restTemplate.postForObject(url, null, String.class);
+	}
 	
 	class ExamplePayload{
 		
