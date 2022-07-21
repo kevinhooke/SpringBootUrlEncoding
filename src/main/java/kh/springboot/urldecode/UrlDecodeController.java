@@ -1,5 +1,12 @@
 package kh.springboot.urldecode;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,17 +66,28 @@ public class UrlDecodeController {
 	
 	/**
 	 * Get method that uses RestTemplate to call POST /example2 passing 
-	 * urlencoded values to show Controller also handles these ok when
-	 * passed from a RestTemplate client.
+	 * values that need to url encoded.
+	 * 
+	 * This shows RestTemplate will url encode and values passed to it as params or post body, and
+	 * the Controller will decode these automatically.
 	 * 
 	 * @return
 	 */
 	@GetMapping(value = "/request")
 	public String request() {
-	    String url =  "http://localhost:8080/example2?param1=test1%26test2";
+	    String url =  "http://localhost:8080/example2?param1=test1&test2";
 	    System.out.println(url);
 	    RestTemplate restTemplate = new RestTemplate();
-	    return restTemplate.postForObject(url, null, String.class);
+	    
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+	    
+	    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+	    map.add("value1","test1&test2");
+	    
+	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers); 
+	    
+	    return restTemplate.postForObject(url, request, String.class);
 	}
 	
 	class ExamplePayload{
